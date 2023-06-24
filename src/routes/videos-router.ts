@@ -49,7 +49,7 @@ videosRouter.post('/', (req: Request, res: Response) => {
     id: Number(date),
     title,
     author,
-    canBeDownloaded: false,
+    canBeDownloaded: true,
     minAgeRestriction: null,
     createdAt: date.toISOString(),
     publicationDate: new Date(date.getTime() + 86400000).toISOString(),
@@ -77,8 +77,8 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
 
   const video = videos.find(video => video.id === +req.params.id)
 
-  if (!video) return res.send(404)
   if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
+  if (!video) return res.send(404)
 
     video.title = req.body.title
     video.author = req.body.author
