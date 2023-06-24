@@ -1,10 +1,15 @@
-import express, {Request, Response} from 'express'
+import express from 'express'
+import {videosRouter} from './routes/videos-router';
+import {removeAllDataRouter} from './routes/removeAllData-router';
+
 const app = express()
 const port = 3000
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello!')
-})
+app.use(express.json())
+
+//routes
+app.use('/videos', videosRouter)
+app.use('/testing', removeAllDataRouter)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
