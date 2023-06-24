@@ -50,16 +50,16 @@ videosRouter.post('/', (req: Request, res: Response) => {
   }
 
   const video: Video = {
-    id: +new Date(),
+    id: Number(new Date()),
     title: req.body.title,
     author: req.body.author,
     canBeDownloaded: false,
     minAgeRestriction: null,
     createdAt: new Date().toISOString(),
-    publicationDate: new Date().toISOString(),
+    publicationDate: new Date(new Date().getTime() + 86400000).toISOString(),
     availableResolutions: req.body.availableResolutions
   }
-  videos = [...videos, video]
+  videos.push(video)
   res.send(201)
 })
 
