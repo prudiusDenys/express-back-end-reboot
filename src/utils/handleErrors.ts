@@ -1,3 +1,5 @@
+import {Resolutions} from '../routes/videos-router';
+
 interface Error {
   message: string,
   field: string
@@ -7,34 +9,78 @@ interface ErrorMessage {
   errorsMessages: Error[]
 }
 
-
 const errorMessage: ErrorMessage = {
   errorsMessages: []
+}
+
+const titleCheck = (title: string) => {
+  if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
+    errorMessage.errorsMessages.push({
+      message: "title is incorrect",
+      field: "title"
+    })
+  }
+}
+const authorCheck = (author: string) => {
+  if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+    errorMessage.errorsMessages.push({
+      message: "author is incorrect",
+      field: "author"
+    })
+  }
+}
+const availableResolutionsCheck = (availableResolutions: []) => {
+  if (!Array.isArray(availableResolutions)) {
+    errorMessage.errorsMessages.push({
+      message: "availableResolutions is incorrect",
+      field: "availableResolutions"
+    })
+  } else {
+    const resolutions = Object.keys(Resolutions)
+
+    availableResolutions.forEach((item: any) => {
+      if(!resolutions.includes(item)){
+       return errorMessage.errorsMessages.push({
+          message: "availableResolutions is incorrect",
+          field: "availableResolutions"
+        })
+      }
+    })
+  }
+}
+const canBeDownloadedCheck = (canBeDownloaded: boolean) => {
+  if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
+    errorMessage.errorsMessages.push({
+      message: "canBeDownloaded is incorrect",
+      field: "canBeDownloaded"
+    })
+  }
+}
+const minAgeRestrictionCheck = (minAgeRestriction: string) => {
+  if (!minAgeRestriction || !minAgeRestriction.trim() || typeof minAgeRestriction !== 'string') {
+    errorMessage.errorsMessages.push({
+      message: "minAgeRestriction is incorrect",
+      field: "minAgeRestriction"
+    })
+  }
+}
+const publicationDateCheck = (publicationDate: string) => {
+  if (!publicationDate || !publicationDate.trim() || typeof publicationDate !== 'string') {
+    errorMessage.errorsMessages.push({
+      message: "publicationDate is incorrect",
+      field: "publicationDate"
+    })
+  }
 }
 
 export const handleVideoErrors = {
   postErrors(title: string, author: string, availableResolutions: []) {
     errorMessage.errorsMessages = []
-    if (!title || typeof title !== 'string' || !title.trim()) {
-      errorMessage.errorsMessages.push({
-        message: "title is incorrect",
-        field: "title"
-      })
-    }
 
-    if (!author || typeof author !== 'string' || !author.trim()) {
-      errorMessage.errorsMessages.push({
-        message: "author is incorrect",
-        field: "author"
-      })
-    }
+    titleCheck(title)
+    authorCheck(author)
+    availableResolutionsCheck(availableResolutions)
 
-    if (!Array.isArray(availableResolutions)) {
-      errorMessage.errorsMessages.push({
-        message: "availableResolutions is incorrect",
-        field: "availableResolutions"
-      })
-    }
     return errorMessage
   },
   putErrors(
@@ -46,47 +92,14 @@ export const handleVideoErrors = {
     publicationDate: string
   ) {
     errorMessage.errorsMessages = []
-    if (!title || !title.trim() || typeof title !== 'string') {
-      errorMessage.errorsMessages.push({
-        message: "title is incorrect",
-        field: "title"
-      })
-    }
 
-    if (!author || !author.trim() || typeof author !== 'string') {
-      errorMessage.errorsMessages.push({
-        message: "author is incorrect",
-        field: "author"
-      })
-    }
+    titleCheck(title)
+    authorCheck(author)
+    availableResolutionsCheck(availableResolutions)
+    canBeDownloadedCheck(canBeDownloaded)
+    minAgeRestrictionCheck(minAgeRestriction)
+    publicationDateCheck(publicationDate)
 
-    if (!Array.isArray(availableResolutions)) {
-      errorMessage.errorsMessages.push({
-        message: "availableResolutions is incorrect",
-        field: "availableResolutions"
-      })
-    }
-
-    if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
-      errorMessage.errorsMessages.push({
-        message: "canBeDownloaded is incorrect",
-        field: "canBeDownloaded"
-      })
-    }
-
-    if (!minAgeRestriction || !minAgeRestriction.trim() || typeof minAgeRestriction !== 'string') {
-      errorMessage.errorsMessages.push({
-        message: "minAgeRestriction is incorrect",
-        field: "minAgeRestriction"
-      })
-    }
-
-    if (!publicationDate || !publicationDate.trim() || typeof publicationDate !== 'string') {
-      errorMessage.errorsMessages.push({
-        message: "publicationDate is incorrect",
-        field: "publicationDate"
-      })
-    }
     return errorMessage
   }
 }

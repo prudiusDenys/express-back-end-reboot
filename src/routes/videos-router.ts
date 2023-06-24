@@ -1,7 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {handleVideoErrors} from '../utils/handleErrors';
 
-
 export enum Resolutions {
   P144 = 'P144',
   P240 = 'P240',
@@ -34,32 +33,31 @@ videosRouter.get('/', (req: Request, res: Response) => {
 
 videosRouter.get('/:id', (req: Request, res: Response) => {
   const video = videos.find(video => video.id === +req.params.id)
-  if (video) {
-    res.status(200).json(video)
-  } else {
-    res.send(404)
-  }
+  if (video) return res.status(200).json(video)
+  res.send(404)
 })
 
 videosRouter.post('/', (req: Request, res: Response) => {
   const {title, author, availableResolutions} = req.body
   const errorMessage = handleVideoErrors.postErrors(title, author, availableResolutions)
 
-  if (errorMessage.errorsMessages.length) {
-    res.status(400).json(errorMessage)
-  }
+  if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
 
-  const video: Video = {
-    id: Number(new Date()),
-    title: req.body.title,
-    author: req.body.author,
+  const date = new Date()
+
+  const newVideo: Video = {
+    id: Number(date),
+    title,
+    author,
     canBeDownloaded: false,
     minAgeRestriction: null,
-    createdAt: new Date().toISOString(),
-    publicationDate: new Date(new Date().getTime() + 86400000).toISOString(),
-    availableResolutions: req.body.availableResolutions
+    createdAt: date.toISOString(),
+    publicationDate: new Date(date.getTime() + 86400000).toISOString(),
+    availableResolutions
   }
-  videos.push(video)
+
+  videos.push(newVideo)
+
   res.send(201)
 })
 
@@ -72,11 +70,12 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
     minAgeRestriction,
     publicationDate
   } = req.body
-  const errorMessage = handleVideoErrors.putErrors(title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate)
+  const errorMessage = handleVideoErrors.putErrors(
+    title, author, availableResolutions,
+    canBeDownloaded, minAgeRestriction, publicationDate
+  )
 
-  if (errorMessage.errorsMessages.length) {
-    res.send(400).json(errorMessage)
-  }
+  if (errorMessage.errorsMessages.length) return res.send(400).json(errorMessage)
 
   const video = videos.find(video => video.id === +req.params.id)
   if (video) {
@@ -87,18 +86,16 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
     video.minAgeRestriction = req.body.minAgeRestriction
     video.publicationDate = req.body.publicationDate
 
-    res.send(204)
-  } else {
-    res.send(404)
+    return res.send(204)
   }
+  res.send(404)
 })
 
 videosRouter.delete('/:id', (req: Request, res: Response) => {
   const video = videos.find(video => video.id === +req.params.id)
   if (video) {
     videos = videos.filter(video => video.id !== +req.params.id)
-    res.send(204)
-  } else {
-    res.send(404)
+    return res.send(204)
   }
+  res.send(404)
 })
