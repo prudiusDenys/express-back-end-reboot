@@ -75,10 +75,11 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
     canBeDownloaded, minAgeRestriction, publicationDate
   )
 
-  if (errorMessage.errorsMessages.length) return res.send(400).json(errorMessage)
-
   const video = videos.find(video => video.id === +req.params.id)
-  if (video) {
+
+  if (!video) return res.send(404)
+  if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
+
     video.title = req.body.title
     video.author = req.body.author
     video.availableResolutions = req.body.availableResolutions
@@ -87,8 +88,6 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
     video.publicationDate = req.body.publicationDate
 
     return res.send(204)
-  }
-  res.send(404)
 })
 
 videosRouter.delete('/:id', (req: Request, res: Response) => {

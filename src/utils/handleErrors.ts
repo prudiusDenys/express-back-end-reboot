@@ -57,7 +57,7 @@ const canBeDownloadedCheck = (canBeDownloaded: boolean) => {
   }
 }
 const minAgeRestrictionCheck = (minAgeRestriction: string) => {
-  if (!minAgeRestriction || !minAgeRestriction.trim() || typeof minAgeRestriction !== 'string') {
+  if (!minAgeRestriction || minAgeRestriction > 18 || minAgeRestriction < 1) {
     errorMessage.errorsMessages.push({
       message: "minAgeRestriction is incorrect",
       field: "minAgeRestriction"
@@ -65,7 +65,7 @@ const minAgeRestrictionCheck = (minAgeRestriction: string) => {
   }
 }
 const publicationDateCheck = (publicationDate: string) => {
-  if (!publicationDate || !publicationDate.trim() || typeof publicationDate !== 'string') {
+  if (!publicationDate || typeof publicationDate !== 'string' || !publicationDate.trim()) {
     errorMessage.errorsMessages.push({
       message: "publicationDate is incorrect",
       field: "publicationDate"
