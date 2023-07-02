@@ -6,7 +6,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    const errorsMessages = errors.array().map((error: any) => {
+    const errorsMessages = errors.array({onlyFirstError: true}).map((error: any) => {
       return {
         message: `${error.path} is incorrect`,
         field: error.path

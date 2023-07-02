@@ -21,9 +21,9 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 blogsRouter.post('/',
+  basicAuthMiddleware,
   nameValidation, descriptionValidation, websiteUrlValidation,
   inputValidationMiddleware,
-  basicAuthMiddleware,
   (req: Request, res: Response) => {
     const createdBlog = blogsRepository.createBlog(req.body)
 
@@ -31,8 +31,8 @@ blogsRouter.post('/',
   })
 
 blogsRouter.put('/:id',
-  nameValidation, descriptionValidation, websiteUrlValidation,
   basicAuthMiddleware,
+  nameValidation, descriptionValidation, websiteUrlValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const isEditedBlog = blogsRepository.editBlog(req.params.id, req.body)

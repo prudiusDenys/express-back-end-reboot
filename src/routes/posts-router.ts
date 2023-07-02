@@ -21,9 +21,10 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 postsRouter.post('/',
+  basicAuthMiddleware,
   titleValidation, shortValidation, contentValidation, blogIdValidation,
   inputValidationMiddleware,
-  basicAuthMiddleware, (req: Request, res: Response) => {
+  (req: Request, res: Response) => {
     const createdPost = postsRepository.createPost(req.body)
 
     if (createdPost) return res.status(201).json(createdPost)
@@ -31,9 +32,10 @@ postsRouter.post('/',
   })
 
 postsRouter.put('/:id',
+  basicAuthMiddleware,
   titleValidation, shortValidation, contentValidation, blogIdValidation,
   inputValidationMiddleware,
-  basicAuthMiddleware, (req: Request, res: Response) => {
+  (req: Request, res: Response) => {
     const isEditedPost = postsRepository.editPost(req.params.id, req.body)
 
     if (isEditedPost) return res.send(204)
