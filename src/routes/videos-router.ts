@@ -1,40 +1,22 @@
 import {Request, Response, Router} from 'express';
 import {handleVideoErrors} from '../utils/handleErrors';
+import {videosRepository} from '../repositories/videos-repository';
 
-export enum Resolutions {
-  P144 = 'P144',
-  P240 = 'P240',
-  P360 = 'P360',
-  P480 = 'P480',
-  P720 = 'P720',
-  P1080 = 'P1080',
-  P1440 = 'P1440',
-  P2160 = 'P2160'
-}
-
-interface Video {
-  id: number
-  title: string
-  author: string
-  canBeDownloaded: boolean
-  minAgeRestriction: null | number
-  createdAt: string,
-  publicationDate: string
-  availableResolutions: Resolutions[]
-}
-
-export let videos: Video[] = []
 
 export const videosRouter = Router({})
 
 videosRouter.get('/', (req: Request, res: Response) => {
-  res.status(200).json(videos)
+  const allVideos = videosRepository.findAllVideos()
+  res.status(200).json(allVideos)
 })
 
 videosRouter.get('/:id', (req: Request, res: Response) => {
-  const video = videos.find(video => video.id === +req.params.id)
-  if (video) return res.status(200).json(video)
-  res.send(404)
+  const video = videosRepository.findVideo(+req.params.id)
+  if (video) {
+    res.status(200).json(video)
+  } else {
+    res.send(404)
+  }
 })
 
 videosRouter.post('/', (req: Request, res: Response) => {
@@ -43,20 +25,7 @@ videosRouter.post('/', (req: Request, res: Response) => {
 
   if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
 
-  const date = new Date()
-
-  const newVideo: Video = {
-    id: Number(date),
-    title,
-    author,
-    canBeDownloaded: false,
-    minAgeRestriction: null,
-    createdAt: date.toISOString(),
-    publicationDate: new Date(date.getTime() + 86400000).toISOString(),
-    availableResolutions
-  }
-
-  videos.push(newVideo)
+  const newVideo = videosRepository.createVideo(title, author, availableResolutions)
 
   res.status(201).json(newVideo)
 })
@@ -75,26 +44,22 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
     canBeDownloaded, minAgeRestriction, publicationDate
   )
 
-  const video = videos.find(video => video.id === +req.params.id)
-
   if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
-  if (!video) return res.send(404)
 
-    video.title = req.body.title
-    video.author = req.body.author
-    video.availableResolutions = req.body.availableResolutions
-    video.canBeDownloaded = req.body.canBeDownloaded
-    video.minAgeRestriction = req.body.minAgeRestriction
-    video.publicationDate = req.body.publicationDate
+  const isVideoUpdated = videosRepository.editVideo(+req.params.id, req.body)
 
-    return res.send(204)
+  if (isVideoUpdated) {
+    res.send(204)
+  } else {
+    res.send(404)
+  }
 })
 
 videosRouter.delete('/:id', (req: Request, res: Response) => {
-  const video = videos.find(video => video.id === +req.params.id)
-  if (video) {
-    videos = videos.filter(video => video.id !== +req.params.id)
-    return res.send(204)
+  const isVideoRemoved = videosRepository.removeVideo(+req.params.id)
+  if (isVideoRemoved) {
+    res.send(204)
+  } else {
+    res.send(404)
   }
-  res.send(404)
 })

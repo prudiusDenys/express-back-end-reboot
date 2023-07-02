@@ -1,4 +1,4 @@
-import {Resolutions} from '../routes/videos-router';
+import {Resolutions} from '../repositories/videos-repository';
 
 interface Error {
   message: string,
@@ -30,14 +30,13 @@ const authorCheck = (author: string) => {
   }
 }
 const availableResolutionsCheck = (availableResolutions: []) => {
-  if (!Array.isArray(availableResolutions)) {
+  if (!Array.isArray(availableResolutions) || !availableResolutions.length) {
     errorMessage.errorsMessages.push({
       message: "availableResolutions is incorrect",
       field: "availableResolutions"
     })
   } else {
     const resolutions = Object.keys(Resolutions)
-
     availableResolutions.forEach((item: any) => {
       if(!resolutions.includes(item)){
        return errorMessage.errorsMessages.push({
@@ -56,7 +55,7 @@ const canBeDownloadedCheck = (canBeDownloaded: boolean) => {
     })
   }
 }
-const minAgeRestrictionCheck = (minAgeRestriction: string) => {
+const minAgeRestrictionCheck = (minAgeRestriction: number) => {
   if (!minAgeRestriction || minAgeRestriction > 18 || minAgeRestriction < 1) {
     errorMessage.errorsMessages.push({
       message: "minAgeRestriction is incorrect",
@@ -88,7 +87,7 @@ export const handleVideoErrors = {
     author: string,
     availableResolutions: [],
     canBeDownloaded: boolean,
-    minAgeRestriction: string,
+    minAgeRestriction: number,
     publicationDate: string
   ) {
     errorMessage.errorsMessages = []
