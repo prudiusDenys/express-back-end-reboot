@@ -27,8 +27,7 @@ postsRouter.post('/',
   (req: Request, res: Response) => {
     const createdPost = postsRepository.createPost(req.body)
 
-    if (createdPost) return res.status(201).json(createdPost)
-    res.send(404)
+    res.status(201).json(createdPost)
   })
 
 postsRouter.put('/:id',

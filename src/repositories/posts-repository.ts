@@ -29,20 +29,17 @@ export const postsRepository = {
     if (post) return post
     return null
   },
-  createPost(postInputModel: PostInputModel): PostViewModel | null {
+  createPost(postInputModel: PostInputModel): PostViewModel {
     const blog = blogs.find(blog => blog.id === postInputModel.blogId)
 
-    if (blog) {
-      const newPost = {
-        id: uuid(),
-        blogName: blog.name,
-        ...postInputModel
-      }
-
-      posts.push(newPost)
-      return newPost
+    const newPost = {
+      id: uuid(),
+      blogName: blog!.name,
+      ...postInputModel
     }
-    return null
+
+    posts.push(newPost)
+    return newPost
   },
   editPost(id: string, postInputModel: PostInputModel): true | null {
     const post = posts.find(post => post.id === id)
