@@ -16,8 +16,8 @@ export const videosService = {
       availableResolutions
     }
 
-    await videosRepository.createVideo(newVideo)
+    await videosRepository.createVideo({...newVideo})
 
     return newVideo
-  },
+  }
 }
