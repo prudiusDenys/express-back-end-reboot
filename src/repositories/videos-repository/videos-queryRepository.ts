@@ -1,7 +1,6 @@
 import {VideoViewModel} from './types';
 import {videosCollection} from '../db';
 
-
 export const videosQueryRepository = {
  async findAllVideos(): Promise<VideoViewModel[]> {
     return videosCollection.find({}, {projection: {_id: 0}}).toArray()
