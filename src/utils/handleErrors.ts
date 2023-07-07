@@ -1,4 +1,5 @@
-import {Resolutions} from '../repositories/videos-repository';
+import {Resolutions} from '../repositories/videos-repository/types';
+
 
 interface Error {
   message: string,

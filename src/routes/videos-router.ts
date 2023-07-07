@@ -1,17 +1,19 @@
 import {Request, Response, Router} from 'express';
 import {handleVideoErrors} from '../utils/handleErrors';
-import {videosRepository} from '../repositories/videos-repository';
+import {videosRepository} from '../repositories/videos-repository/videos-repository';
+import {videosQueryRepository} from '../repositories/videos-repository/videos-queryRepository';
+import {videosService} from '../domain/videos-service';
 
 
 export const videosRouter = Router({})
 
-videosRouter.get('/', (req: Request, res: Response) => {
-  const allVideos = videosRepository.findAllVideos()
+videosRouter.get('/', async (req: Request, res: Response) => {
+  const allVideos = await videosQueryRepository.findAllVideos()
   res.status(200).json(allVideos)
 })
 
-videosRouter.get('/:id', (req: Request, res: Response) => {
-  const video = videosRepository.findVideo(+req.params.id)
+videosRouter.get('/:id', async (req: Request, res: Response) => {
+  const video = await videosQueryRepository.findVideo(+req.params.id)
   if (video) {
     res.status(200).json(video)
   } else {
@@ -19,18 +21,18 @@ videosRouter.get('/:id', (req: Request, res: Response) => {
   }
 })
 
-videosRouter.post('/', (req: Request, res: Response) => {
+videosRouter.post('/', async (req: Request, res: Response) => {
   const {title, author, availableResolutions} = req.body
   const errorMessage = handleVideoErrors.postErrors(title, author, availableResolutions)
 
   if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
 
-  const newVideo = videosRepository.createVideo(title, author, availableResolutions)
+  const newVideo = await videosService.createVideo(title, author, availableResolutions)
 
   res.status(201).json(newVideo)
 })
 
-videosRouter.put('/:id', (req: Request, res: Response) => {
+videosRouter.put('/:id', async (req: Request, res: Response) => {
   const {
     title,
     author,
@@ -46,7 +48,7 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
 
   if (errorMessage.errorsMessages.length) return res.status(400).json(errorMessage)
 
-  const isVideoUpdated = videosRepository.editVideo(+req.params.id, req.body)
+  const isVideoUpdated = await videosRepository.editVideo(+req.params.id, req.body)
 
   if (isVideoUpdated) {
     res.send(204)
@@ -55,8 +57,8 @@ videosRouter.put('/:id', (req: Request, res: Response) => {
   }
 })
 
-videosRouter.delete('/:id', (req: Request, res: Response) => {
-  const isVideoRemoved = videosRepository.removeVideo(+req.params.id)
+videosRouter.delete('/:id', async (req: Request, res: Response) => {
+  const isVideoRemoved = await videosRepository.removeVideo(+req.params.id)
   if (isVideoRemoved) {
     res.send(204)
   } else {
