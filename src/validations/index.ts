@@ -8,7 +8,7 @@ export const websiteUrlValidation = body('websiteUrl').isString().trim().notEmpt
 export const titleValidation = body('title').isString().trim().notEmpty().isLength({max: 30})
 export const shortValidation = body('shortDescription').isString().trim().notEmpty().isLength({max: 100})
 export const contentValidation = body('content').isString().trim().notEmpty().isLength({max: 1000})
-export const blogIdValidation = body('blogId').isString().trim().notEmpty().custom(async (blogId)  => {
-  const blog = await blogsQueryRepository.getBlog(blogId)
+export const blogIdValidation = body('blogId').isString().trim().notEmpty().custom(async value  => {
+  const blog = await blogsQueryRepository.getBlog(value)
   return !!blog;
 })
