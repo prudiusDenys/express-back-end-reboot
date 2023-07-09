@@ -1,10 +1,14 @@
 import {BlogInputModel, BlogViewModel} from './types';
-import {blogsCollection} from '../db';
+import {blogsCollection, postsCollection} from '../db';
+import {PostViewModel} from '../posts-repository/types';
 
 
 export const blogsRepository = {
   async createBlog(createdBlog: BlogViewModel): Promise<void> {
     await blogsCollection.insertOne(createdBlog)
+  },
+  async createPostForSpecificBlog(createdPost: PostViewModel): Promise<void> {
+    await postsCollection.insertOne(createdPost)
   },
   async editBlog(id: string, blogInputModel: BlogInputModel): Promise<true | null> {
     const blog = await blogsCollection.findOne({id})

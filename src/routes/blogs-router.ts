@@ -2,15 +2,23 @@ import {Request, Response, Router} from 'express';
 import {blogsRepository} from '../repositories/blogs-repository/blogs-repository';
 import {basicAuthMiddleware} from '../middlewares/basicAuthMiddleware';
 import {inputValidationMiddleware} from '../middlewares/inputValidationMiddleware';
-import {descriptionValidation, nameValidation, websiteUrlValidation} from '../validations';
+import {
+  contentValidation,
+  descriptionValidation,
+  nameValidation,
+  shortValidation,
+  titleValidation,
+  websiteUrlValidation
+} from '../validations';
 import {blogsQueryRepository} from '../repositories/blogs-repository/blogs-queryRepository';
 import {blogsService} from '../domain/blogs-service';
+import {BlogQueryInputModel, QueryParams} from '../repositories/blogs-repository/types';
 
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: Request, res: Response) => {
-  const allBlogs = await blogsQueryRepository.getAllBlogs()
+blogsRouter.get('/', async (req: Request<{}, {}, {}, BlogQueryInputModel>, res: Response) => {
+  const allBlogs = await blogsQueryRepository.getAllBlogs(req.query)
 
   res.status(200).json(allBlogs)
 })
@@ -22,6 +30,15 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
   res.send(404)
 })
 
+blogsRouter.get('/:id/posts', async (req: Request<{ id: string }, {}, {}, QueryParams>, res: Response) => {
+
+  const allBlogsForSpecificBlog = await blogsQueryRepository.getAllPostsForSpecificPost(req.query, req.params.id)
+
+  if (allBlogsForSpecificBlog) return res.status(200).json(allBlogsForSpecificBlog)
+  res.send(404)
+
+})
+
 blogsRouter.post('/',
   basicAuthMiddleware,
   nameValidation, descriptionValidation, websiteUrlValidation,
@@ -31,6 +48,17 @@ blogsRouter.post('/',
 
     res.status(201).json(createdBlog)
   })
+
+blogsRouter.post('/:id/posts',
+  basicAuthMiddleware,
+  titleValidation, shortValidation, contentValidation,
+  async (req: Request, res: Response) => {
+  const createdPost = await blogsService.createPostForSpecificBlog(req.body, req.params.id)
+
+  if (createdPost) return res.status(201).json(createdPost)
+
+  res.send(404)
+})
 
 blogsRouter.put('/:id',
   basicAuthMiddleware,

@@ -5,12 +5,13 @@ import {inputValidationMiddleware} from '../middlewares/inputValidationMiddlewar
 import {blogIdValidation, contentValidation, shortValidation, titleValidation} from '../validations';
 import {postsQueryRepository} from '../repositories/posts-repository/posts-queryRepository';
 import {postsService} from '../domain/posts-service';
+import {QueryParams} from '../repositories/blogs-repository/types';
 
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', async (req: Request, res: Response) => {
-  const allPosts = await postsQueryRepository.getAllPosts()
+postsRouter.get('/', async (req: Request<{}, {}, {}, QueryParams>, res: Response) => {
+  const allPosts = await postsQueryRepository.getAllPosts(req.query)
 
   res.status(200).json(allPosts)
 })

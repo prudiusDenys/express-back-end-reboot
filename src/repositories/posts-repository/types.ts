@@ -14,3 +14,11 @@ export interface PostInputModel {
   content: string
   blogId: string
 }
+
+export interface PostItem {
+  pagesCount: number
+  page: number
+  pageSize: number
+  totalCount: number
+  items: PostViewModel[]
+}
