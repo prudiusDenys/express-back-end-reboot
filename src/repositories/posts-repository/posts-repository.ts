@@ -9,7 +9,6 @@ export const postsRepository = {
   async editPost(id: string, postInputModel: PostInputModel): Promise<true | null> {
     const post = await postsCollection.findOne({id})
 
-
     if (post) {
       await postsCollection.updateOne({id}, {
         $set: {

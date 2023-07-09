@@ -9,16 +9,15 @@ export const videosRouter = Router({})
 
 videosRouter.get('/', async (req: Request, res: Response) => {
   const allVideos = await videosQueryRepository.findAllVideos()
+
   res.status(200).json(allVideos)
 })
 
 videosRouter.get('/:id', async (req: Request, res: Response) => {
   const video = await videosQueryRepository.findVideo(+req.params.id)
-  if (video) {
-    res.status(200).json(video)
-  } else {
-    res.send(404)
-  }
+
+  if (video) return res.status(200).json(video)
+  res.send(404)
 })
 
 videosRouter.post('/', async (req: Request, res: Response) => {
@@ -41,6 +40,7 @@ videosRouter.put('/:id', async (req: Request, res: Response) => {
     minAgeRestriction,
     publicationDate
   } = req.body
+
   const errorMessage = handleVideoErrors.putErrors(
     title, author, availableResolutions,
     canBeDownloaded, minAgeRestriction, publicationDate
@@ -50,18 +50,13 @@ videosRouter.put('/:id', async (req: Request, res: Response) => {
 
   const isVideoUpdated = await videosRepository.editVideo(+req.params.id, req.body)
 
-  if (isVideoUpdated) {
-    res.send(204)
-  } else {
-    res.send(404)
-  }
+  if (isVideoUpdated) return res.send(204)
+  res.send(404)
 })
 
 videosRouter.delete('/:id', async (req: Request, res: Response) => {
   const isVideoRemoved = await videosRepository.removeVideo(+req.params.id)
-  if (isVideoRemoved) {
-    res.send(204)
-  } else {
-    res.send(404)
-  }
+
+  if (isVideoRemoved) return res.send(204)
+  res.send(404)
 })

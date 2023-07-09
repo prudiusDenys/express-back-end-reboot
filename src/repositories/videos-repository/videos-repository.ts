@@ -27,6 +27,7 @@ export const videosRepository = {
   },
   async removeVideo(id: number): Promise<true | null> {
     const video = await videosCollection.findOne({id})
+
     if (video) {
       await videosCollection.deleteOne({id})
       return true

@@ -17,5 +17,5 @@ export const postsService =  {
     await postsRepository.createPost({...newPost})
 
     return newPost
-  },
+  }
 }

@@ -1,5 +1,5 @@
 import {PostItem, PostViewModel} from './types';
-import {blogsCollection, postsCollection} from '../db';
+import {postsCollection} from '../db';
 import {QueryParams} from '../blogs-repository/types';
 import {calcPagesCount, calcSkipPages} from '../../utils/calculatePagination';
 
