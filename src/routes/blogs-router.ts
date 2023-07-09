@@ -52,6 +52,7 @@ blogsRouter.post('/',
 blogsRouter.post('/:id/posts',
   basicAuthMiddleware,
   titleValidation, shortValidation, contentValidation,
+  inputValidationMiddleware,
   async (req: Request, res: Response) => {
   const createdPost = await blogsService.createPostForSpecificBlog(req.body, req.params.id)
 
