@@ -29,7 +29,7 @@ export const usersQueryRepository = {
         .sort({[sortBy]: sortDirection == 'asc' ? 1 : -1})
         .toArray()
     } else {
-      const foundUsers = await usersCollection
+      const users = await usersCollection
         .find({
             $or: [
               {login: {$regex: new RegExp(searchLoginTerm, 'i')}},
@@ -39,30 +39,19 @@ export const usersQueryRepository = {
           {
             projection: {_id: 0, password: 0}
           })
+        .skip(calcSkipPages(+pageNumber, +pageSize))
+        .limit(+pageSize)
+        .sort({[sortBy]: sortDirection == 'asc' ? 1 : -1})
         .toArray()
 
-      if (foundUsers.length) {
-        users = [...users, ...foundUsers]
-        totalCount += foundUsers.length
-      }
+      totalCount = users.length
     }
-
-    // if (searchEmailTerm) {
-    //   const foundUsers = await usersCollection
-    //     .find({email: {$regex: new RegExp(searchEmailTerm, 'i')}}, {projection: {_id: 0, password: 0}})
-    //     .toArray()
-    //
-    //   if (foundUsers.length) {
-    //     users = [...users, ...foundUsers]
-    //     totalCount += foundUsers.length
-    //   }
-    // }
 
     return {
       pagesCount: calcPagesCount(totalCount, +pageSize),
       page: +pageNumber,
-      totalCount: totalCount,
       pageSize: +pageSize,
+      totalCount: totalCount,
       items: users
     }
   }
