@@ -1,3 +1,5 @@
+import {PaginatorViewModel} from '../../commonTypes/types';
+
 export interface PostViewModel {
   id: string
   title: string
@@ -15,10 +17,6 @@ export interface PostInputModel {
   blogId: string
 }
 
-export interface PostItem {
-  pagesCount: number
-  page: number
-  pageSize: number
-  totalCount: number
+export interface PostItem extends PaginatorViewModel{
   items: PostViewModel[]
 }

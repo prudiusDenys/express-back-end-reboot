@@ -5,3 +5,5 @@ export const calcPagesCount = (totalCount: number, pageSize: number) => {
 export const calcSkipPages = (pageNumber: number, pageSize: number) => {
   return (pageNumber - 1) * pageSize
 }
+
+1* 2

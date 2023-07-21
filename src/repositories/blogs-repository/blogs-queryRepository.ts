@@ -1,6 +1,7 @@
-import {BlogItem, BlogQueryInputModel, BlogViewModel, QueryParams} from './types';
+import {BlogItem, BlogQueryInputModel, BlogViewModel} from './types';
 import {blogsCollection, postsCollection} from '../db';
 import {calcPagesCount, calcSkipPages} from '../../utils/calculatePagination';
+import {QueryParams} from '../../commonTypes/types';
 
 
 export let blogs: BlogViewModel[] = []

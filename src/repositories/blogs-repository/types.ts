@@ -1,3 +1,5 @@
+import {PaginatorViewModel, QueryParams} from '../../commonTypes/types';
+
 export interface BlogViewModel {
   id: string
   name: string
@@ -13,22 +15,11 @@ export interface BlogInputModel {
   websiteUrl: string
 }
 
-export interface QueryParams {
-  sortBy: string
-  sortDirection: string
-  pageNumber: string
-  pageSize: string
-}
-
 export interface BlogQueryInputModel extends QueryParams {
   searchNameTerm: string
 }
 
-export interface BlogItem {
-  pagesCount: number
-  page: number
-  pageSize: number
-  totalCount: number
+export interface BlogItem extends PaginatorViewModel{
   items: BlogViewModel[]
 }
 

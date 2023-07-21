@@ -12,7 +12,8 @@ import {
 } from '../validations';
 import {blogsQueryRepository} from '../repositories/blogs-repository/blogs-queryRepository';
 import {blogsService} from '../domain/blogs-service';
-import {BlogQueryInputModel, QueryParams} from '../repositories/blogs-repository/types';
+import {BlogQueryInputModel} from '../repositories/blogs-repository/types';
+import {QueryParams} from '../commonTypes/types';
 
 
 export const blogsRouter = Router({})

@@ -1,7 +1,7 @@
 import {PostItem, PostViewModel} from './types';
 import {postsCollection} from '../db';
-import {QueryParams} from '../blogs-repository/types';
 import {calcPagesCount, calcSkipPages} from '../../utils/calculatePagination';
+import {QueryParams} from '../../commonTypes/types';
 
 
 export let posts: PostViewModel[] = []

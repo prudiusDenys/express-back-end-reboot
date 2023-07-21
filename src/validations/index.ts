@@ -12,3 +12,7 @@ export const blogIdValidation = body('blogId').isString().trim().notEmpty().cust
   const blog = await blogsQueryRepository.getBlog(blogId)
   if(!blog) throw new Error();
 })
+export const loginValidation = body('login').isString().trim().notEmpty().isLength({min: 3, max: 10}).matches(/^[a-zA-Z0-9_-]*$/)
+export const passwordValidation = body('password').isString().trim().notEmpty().isLength({min: 6, max: 20}).matches(/^[a-zA-Z0-9_-]*$/)
+export const loginOrEmailValidation = body('loginOrEmail').isString().trim().notEmpty()
+export const emailValidation = body('email').isString().trim().notEmpty().matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)

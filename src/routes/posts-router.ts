@@ -5,7 +5,7 @@ import {inputValidationMiddleware} from '../middlewares/inputValidationMiddlewar
 import {blogIdValidation, contentValidation, shortValidation, titleValidation} from '../validations';
 import {postsQueryRepository} from '../repositories/posts-repository/posts-queryRepository';
 import {postsService} from '../domain/posts-service';
-import {QueryParams} from '../repositories/blogs-repository/types';
+import {QueryParams} from '../commonTypes/types';
 
 
 export const postsRouter = Router({})
