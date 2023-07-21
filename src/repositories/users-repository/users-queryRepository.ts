@@ -4,7 +4,7 @@ import {usersCollection} from '../db';
 
 
 export const usersQueryRepository = {
-  async findUserByLoginOrEmail(loginOrEmail: string): UserViewModelDB | null {
+  async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserViewModelDB | null> {
     return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
   },
   async getAllUsers(query: UserQueryInputModel): Promise<UserOutputViewModel> {
