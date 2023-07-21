@@ -36,7 +36,7 @@ export const usersQueryRepository = {
       }
     }
     if (!searchLoginTerm && !searchEmailTerm) {
-      totalCount = (await usersCollection.find({}).toArray()).length
+      totalCount = await usersCollection.countDocuments()
 
       users = await usersCollection
         .find({}, {projection: {_id: 0, password: 0}})
