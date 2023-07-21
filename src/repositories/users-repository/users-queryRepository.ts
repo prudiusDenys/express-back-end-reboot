@@ -20,19 +20,23 @@ export const usersQueryRepository = {
     let totalCount = 0, users = []
 
     if (searchLoginTerm) {
-      const user = await usersCollection.findOne({login: {$regex: new RegExp(searchLoginTerm, 'i')}}, {projection: {_id: 0, password: 0}})
+      const foundUsers = await usersCollection
+        .find({login: {$regex: new RegExp(searchLoginTerm, 'i')}}, {projection: {_id: 0, password: 0}})
+        .toArray()
 
-      if (user) {
-        users.push(user)
-        totalCount += 1
+      if (foundUsers.length) {
+        users = [...users, ...foundUsers]
+        totalCount += foundUsers.length
       }
     }
     if (searchEmailTerm) {
-      const user = await usersCollection.findOne({email: {$regex: new RegExp(searchEmailTerm, 'i')}}, {projection: {_id: 0, password: 0}})
+      const foundUsers = await usersCollection
+        .find({email: {$regex: new RegExp(searchEmailTerm, 'i')}}, {projection: {_id: 0, password: 0}})
+        .toArray()
 
-      if (user) {
-        users.push(user)
-        totalCount += 1
+      if (foundUsers.length) {
+        users = [...users, ...foundUsers]
+        totalCount += foundUsers.length
       }
     }
     if (!searchLoginTerm && !searchEmailTerm) {
@@ -45,7 +49,6 @@ export const usersQueryRepository = {
         .sort({[sortBy]: sortDirection == 'asc' ? 1 : -1})
         .toArray()
     }
-
 
     return {
       pagesCount: calcPagesCount(totalCount, +pageSize),
