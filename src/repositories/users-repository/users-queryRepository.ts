@@ -1,6 +1,7 @@
 import {UserOutputViewModel, UserQueryInputModel, UserViewModelDB} from './types';
 import {calcPagesCount, calcSkipPages} from '../../utils/calculatePagination';
 import {usersCollection} from '../db';
+import {getUniqueUsers} from '../../utils/getUniqueUsers';
 
 
 export const usersQueryRepository = {
@@ -53,9 +54,9 @@ export const usersQueryRepository = {
     return {
       pagesCount: calcPagesCount(totalCount, +pageSize),
       page: +pageNumber,
-      totalCount,
+      totalCount: getUniqueUsers(users).length,
       pageSize: +pageSize,
-      items: users
+      items: getUniqueUsers(users)
     }
   }
 }
