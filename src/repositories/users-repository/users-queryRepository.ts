@@ -29,11 +29,11 @@ export const usersQueryRepository = {
         .sort({[sortBy]: sortDirection == 'asc' ? 1 : -1})
         .toArray()
     } else {
-      const users = await usersCollection
+      users = await usersCollection
         .find({
             $or: [
-              {login: {$regex: new RegExp(searchLoginTerm, 'i')}},
-              {email: {$regex: new RegExp(searchEmailTerm, 'i')}}
+              {'login': {$regex: new RegExp(searchLoginTerm, 'i')}},
+              {'email': {$regex: new RegExp(searchEmailTerm, 'i')}}
             ]
           },
           {
