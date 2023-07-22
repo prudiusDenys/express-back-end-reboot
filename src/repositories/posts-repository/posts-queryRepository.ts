@@ -33,7 +33,7 @@ export const postsQueryRepository = {
     }
   },
   async getPost(id: string): Promise<PostViewModel | null> {
-    const post = postsCollection.findOne({id}, {projection: {_id: 0}})
+    const post = await postsCollection.findOne({id}, {projection: {_id: 0}})
 
     if (post) return post
     return null

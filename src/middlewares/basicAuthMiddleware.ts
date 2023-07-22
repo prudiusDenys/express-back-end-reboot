@@ -12,7 +12,7 @@ export const basicAuthMiddleware = (req: Request, res: Response,  next: NextFunc
     const [login, password] = decodeBase64(authValue)
 
     if (basic === 'Basic' && login === 'admin' && password === 'qwerty') {
-      next()
+      return next()
     } else {
       res.sendStatus(HttpCodes.UNAUTHORIZED)
     }

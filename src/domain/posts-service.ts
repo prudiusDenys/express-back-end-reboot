@@ -26,7 +26,7 @@ export const postsService = {
     if (!post) return null
 
     const newComment = {
-      id: '',
+      id: uuid(),
       content: comment,
       commentatorInfo: {
         userId: userId,

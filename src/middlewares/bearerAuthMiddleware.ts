@@ -12,7 +12,7 @@ export const bearerAuthMiddleware = async (req: Request, res: Response, next: Ne
 
   if (userId) {
     req.user = await usersQueryRepository.findUserById(userId)
-    next()
+    return next()
   }
   res.send(HttpCodes.UNAUTHORIZED)
 }
