@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {bearerAuthMiddleware} from '../middlewares/bearerAuthMiddleware';
-import {contentValidation} from '../validations';
+import {CommentContentValidation} from '../validations';
 import {inputValidationMiddleware} from '../middlewares/inputValidationMiddleware';
 import {commentsService} from '../domain/comments-service';
 import {HttpCodes} from '../http-codes/http-codes';
@@ -19,7 +19,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
 
 commentsRouter.put('/:id',
   bearerAuthMiddleware,
-  contentValidation,
+  CommentContentValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
     const result = await commentsService.editComment(req.params.id, req.body.content, req.user!.id)

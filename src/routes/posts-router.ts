@@ -2,7 +2,13 @@ import {Request, Response, Router} from 'express';
 import {postsRepository} from '../repositories/posts-repository/posts-repository';
 import {basicAuthMiddleware} from '../middlewares/basicAuthMiddleware';
 import {inputValidationMiddleware} from '../middlewares/inputValidationMiddleware';
-import {blogIdValidation, contentValidation, shortValidation, titleValidation} from '../validations';
+import {
+  blogIdValidation,
+  CommentContentValidation,
+  contentValidation,
+  shortValidation,
+  titleValidation
+} from '../validations';
 import {postsQueryRepository} from '../repositories/posts-repository/posts-queryRepository';
 import {postsService} from '../domain/posts-service';
 import {QueryParams} from '../commonTypes/types';
@@ -34,23 +40,6 @@ postsRouter.post('/',
     res.status(201).json(createdPost)
   })
 
-postsRouter.post('/:postId/comments',
-  bearerAuthMiddleware,
-  contentValidation,
-  inputValidationMiddleware,
-  async (req: Request, res: Response) => {
-    const createdComment = await postsService.createComment(
-      req.params.postId,
-      req.body.content,
-      req.user!.id,
-      req.user!.login
-    )
-
-    if (createdComment) return res.status(201).json(createdComment)
-
-    res.send(404)
-  })
-
 postsRouter.put('/:id',
   basicAuthMiddleware,
   titleValidation, shortValidation, contentValidation, blogIdValidation,
@@ -68,3 +57,22 @@ postsRouter.delete('/:id', basicAuthMiddleware, async (req: Request, res: Respon
   if (isPostRemoved) return res.send(204)
   res.send(404)
 })
+
+//Comments Part
+
+postsRouter.post('/:postId/comments',
+  bearerAuthMiddleware,
+  CommentContentValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const createdComment = await postsService.createComment(
+      req.params.postId,
+      req.body.content,
+      req.user!.id,
+      req.user!.login
+    )
+
+    if (createdComment) return res.status(201).json(createdComment)
+
+    res.send(404)
+  })
