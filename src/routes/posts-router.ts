@@ -13,6 +13,10 @@ import {postsQueryRepository} from '../repositories/posts-repository/posts-query
 import {postsService} from '../domain/posts-service';
 import {QueryParams} from '../commonTypes/types';
 import {bearerAuthMiddleware} from '../middlewares/bearerAuthMiddleware';
+import {normalizeComment, normalizeUser} from '../utils/normalizeData';
+import {blogsQueryRepository} from '../repositories/blogs-repository/blogs-queryRepository';
+import {commentsQueryRepository} from '../repositories/comments-repository/comments-queryRepository';
+import {HttpCodes} from '../http-codes/http-codes';
 
 
 export const postsRouter = Router({})
@@ -72,7 +76,18 @@ postsRouter.post('/:postId/comments',
       req.user!.login
     )
 
-    if (createdComment) return res.status(201).json(createdComment)
+    if (createdComment) {
+      const normalizedComment = normalizeComment(createdComment)
+      return res.status(201).json(normalizedComment)
+    }
 
+    res.send(404)
+  })
+
+postsRouter.get('/:postId/comments',
+  async (req: Request<{postId: string}, {}, {}, QueryParams>, res: Response) => {
+    const allCommentsForSpecificPost = await commentsQueryRepository.getAllCommentsForSpecificPost(req.query, req.params.postId)
+
+    if (allCommentsForSpecificPost) return res.status(HttpCodes.SUCCESSFUL).json(allCommentsForSpecificPost)
     res.send(404)
   })

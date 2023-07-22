@@ -33,7 +33,7 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
 
 blogsRouter.get('/:id/posts', async (req: Request<{ id: string }, {}, {}, QueryParams>, res: Response) => {
 
-  const allBlogsForSpecificBlog = await blogsQueryRepository.getAllPostsForSpecificPost(req.query, req.params.id)
+  const allBlogsForSpecificBlog = await blogsQueryRepository.getAllPostsForSpecificBlog(req.query, req.params.id)
 
   if (allBlogsForSpecificBlog) return res.status(200).json(allBlogsForSpecificBlog)
   res.send(404)

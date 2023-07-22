@@ -2,6 +2,7 @@ import {BlogItem, BlogQueryInputModel, BlogViewModel} from './types';
 import {blogsCollection, postsCollection} from '../db';
 import {calcPagesCount, calcSkipPages} from '../../utils/calculatePagination';
 import {QueryParams} from '../../commonTypes/types';
+import {PostItem} from '../posts-repository/types';
 
 
 export let blogs: BlogViewModel[] = []
@@ -35,7 +36,7 @@ export const blogsQueryRepository = {
       items: allBlogs
     }
   },
-  async getAllPostsForSpecificPost(blogQueryInputModel: QueryParams, blogId: string): Promise<any> {
+  async getAllPostsForSpecificBlog(blogQueryInputModel: QueryParams, blogId: string): Promise<PostItem> {
     const blog = await blogsCollection.findOne({id: blogId}, {projection: {_id: 0}})
 
     if(!blog) return null

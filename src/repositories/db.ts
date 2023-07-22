@@ -4,7 +4,7 @@ import {VideoViewModel} from './videos-repository/types';
 import {BlogViewModel} from './blogs-repository/types';
 import {PostViewModel} from './posts-repository/types';
 import {UserViewModelDB} from './users-repository/types';
-import {CommentViewModel} from './comments-repository/types';
+import {CommentViewModelDB} from './comments-repository/types';
 
 const mongoUri = process.env.MONGO_URI;
 
@@ -19,7 +19,7 @@ export const videosCollection = dataBase.collection<VideoViewModel>('videos')
 export const blogsCollection = dataBase.collection<BlogViewModel>('blogs')
 export const postsCollection = dataBase.collection<PostViewModel>('posts')
 export const usersCollection = dataBase.collection<UserViewModelDB>('users')
-export const commentsCollection = dataBase.collection<CommentViewModel>('comments')
+export const commentsCollection = dataBase.collection<CommentViewModelDB>('comments')
 
 export async function runDb() {
   try {
