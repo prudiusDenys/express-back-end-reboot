@@ -8,8 +8,8 @@ interface AccessToken {
 
 export const jwtService = {
   async createJWT(user: UserViewModelDB): Promise<AccessToken> {
-    const jwt = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
-    return {accessToken: jwt}
+    const jwtToken = jwt.sign({userId: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
+    return {accessToken: jwtToken}
   },
   async getUserIdByToken(token: string): Promise<string | null> {
     try {
