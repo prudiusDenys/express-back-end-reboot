@@ -8,10 +8,10 @@ export const bearerAuthMiddleware = async (req: Request, res: Response, next: Ne
   if (!req.headers.authorization) return res.send(HttpCodes.UNAUTHORIZED)
 
   const token = req.headers.authorization.split(' ')[1]
-  const result = await jwtService.getUserIdByToken(token)
+  const userId = await jwtService.getUserIdByToken(token)
 
-  if (result) {
-    req.user = await usersQueryRepository.findUserById(result.accessToken)
+  if (userId) {
+    req.user = await usersQueryRepository.findUserById(userId)
     next()
   }
   res.send(HttpCodes.UNAUTHORIZED)

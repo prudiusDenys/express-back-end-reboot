@@ -19,8 +19,8 @@ authRouter.post('/login',
     const user = await authService.checkCredentials(loginOrEmail, password)
 
     if (user) {
-      const accessToken = await jwtService.createJWT(user)
-      return res.status(200).json(accessToken)
+      const token = await jwtService.createJWT(user)
+      return res.status(200).json(token)
     }
 
     res.send(HttpCodes.UNAUTHORIZED)
