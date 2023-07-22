@@ -21,6 +21,6 @@ export const commentsService = {
 
     const result = await commentsRepository.removeComment(commentId)
 
-    if (result) return HttpCodes.NOT_FOUND
+    if (result) return HttpCodes.NO_CONTENT
   }
 }

@@ -36,8 +36,7 @@ export const blogsQueryRepository = {
     }
   },
   async getAllPostsForSpecificPost(blogQueryInputModel: QueryParams, blogId: string): Promise<any> {
-    const blog = await blogsCollection.findOne({id: blogId}
-    )
+    const blog = await blogsCollection.findOne({id: blogId}, {projection: {_id: 0}})
 
     if(!blog) return null
 

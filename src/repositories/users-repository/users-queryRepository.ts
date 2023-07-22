@@ -5,7 +5,7 @@ import {usersCollection} from '../db';
 
 export const usersQueryRepository = {
   async findUserByLoginOrEmail(loginOrEmail: string): Promise<UserViewModelDB | null> {
-    return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]})
+    return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}]}, {projection: {_id: 0}})
   },
   async getAllUsers(query: UserQueryInputModel): Promise<UserOutputViewModel> {
     const {
@@ -56,6 +56,6 @@ export const usersQueryRepository = {
     }
   },
   async findUserById(userId: string): Promise<UserViewModelDB | null> {
-    return usersCollection.findOne({id: userId})
+    return usersCollection.findOne({id: userId}, {projection: {_id: 0}})
   }
 }
