@@ -6,6 +6,7 @@ import {blogIdValidation, contentValidation, shortValidation, titleValidation} f
 import {postsQueryRepository} from '../repositories/posts-repository/posts-queryRepository';
 import {postsService} from '../domain/posts-service';
 import {QueryParams} from '../commonTypes/types';
+import {bearerAuthMiddleware} from '../middlewares/bearerAuthMiddleware';
 
 
 export const postsRouter = Router({})
@@ -31,6 +32,23 @@ postsRouter.post('/',
     const createdPost = await postsService.createPost(req.body)
 
     res.status(201).json(createdPost)
+  })
+
+postsRouter.post('/:postId/comments',
+  bearerAuthMiddleware,
+  contentValidation,
+  inputValidationMiddleware,
+  async (req: Request, res: Response) => {
+    const createdComment = await postsService.createComment(
+      req.params.postId,
+      req.body.content,
+      req.user!.id,
+      req.user!.login
+    )
+
+    if (createdComment) return res.status(201).json(createdComment)
+
+    res.send(404)
   })
 
 postsRouter.put('/:id',

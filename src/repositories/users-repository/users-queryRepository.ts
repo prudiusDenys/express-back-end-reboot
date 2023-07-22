@@ -32,8 +32,8 @@ export const usersQueryRepository = {
       users = await usersCollection
         .find({
             $or: [
-              {'login': {$regex: new RegExp(searchLoginTerm, 'i')}},
-              {'email': {$regex: new RegExp(searchEmailTerm, 'i')}}
+              {login: {$regex: new RegExp(searchLoginTerm, 'i')}},
+              {email: {$regex: new RegExp(searchEmailTerm, 'i')}}
             ]
           },
           {
@@ -54,5 +54,8 @@ export const usersQueryRepository = {
       totalCount: totalCount,
       items: users
     }
+  },
+  async findUserById(userId: string): Promise<UserViewModelDB | null> {
+    return usersCollection.findOne({id: userId})
   }
 }

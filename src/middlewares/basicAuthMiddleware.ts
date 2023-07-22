@@ -1,5 +1,6 @@
 import {NextFunction, Response, Request} from 'express';
 import {decodeBase64} from '../utils/decodeBase64';
+import {HttpCodes} from '../http-codes/http-codes';
 
 
 export const basicAuthMiddleware = (req: Request, res: Response,  next: NextFunction) => {
@@ -13,9 +14,9 @@ export const basicAuthMiddleware = (req: Request, res: Response,  next: NextFunc
     if (basic === 'Basic' && login === 'admin' && password === 'qwerty') {
       next()
     } else {
-      res.sendStatus(401)
+      res.sendStatus(HttpCodes.UNAUTHORIZED)
     }
   } else {
-    res.sendStatus(401)
+    res.sendStatus(HttpCodes.UNAUTHORIZED)
   }
 }

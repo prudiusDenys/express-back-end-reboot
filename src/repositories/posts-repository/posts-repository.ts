@@ -1,5 +1,6 @@
 import {PostInputModel, PostViewModel} from './types';
 import {postsCollection} from '../db';
+import {CommentViewModel} from '../comments-repository/types';
 
 
 export const postsRepository = {
