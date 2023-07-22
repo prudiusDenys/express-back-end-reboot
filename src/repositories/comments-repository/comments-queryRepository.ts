@@ -5,7 +5,7 @@ import {calcPagesCount, calcSkipPages} from '../../utils/calculatePagination';
 
 export const commentsQueryRepository = {
   async findCommentById(id: string): Promise<CommentViewModel | null> {
-    return commentsCollection.findOne({id}, {projection: {_id: 0}})
+    return commentsCollection.findOne({id}, {projection: {_id: 0, postId: 0}})
   },
   async getAllCommentsForSpecificPost(query: QueryParams, postId: string): Promise<CommentItem | null> {
     const post = await postsCollection.findOne({id: postId}, {projection: {_id: 0}})
@@ -21,7 +21,7 @@ export const commentsQueryRepository = {
 
     const allCommentsCount = (await commentsCollection.find({postId}).toArray()).length
 
-    const allComments = await commentsCollection.find({postId}, {projection: {_id: 0}})
+    const allComments = await commentsCollection.find({postId}, {projection: {_id: 0, postId: 0}})
       .skip(calcSkipPages(+pageNumber, +pageSize))
       .limit(+pageSize)
       .sort({[sortBy]: sortDirection == 'asc' ? 1 : -1})

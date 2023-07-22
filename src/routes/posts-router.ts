@@ -13,8 +13,7 @@ import {postsQueryRepository} from '../repositories/posts-repository/posts-query
 import {postsService} from '../domain/posts-service';
 import {QueryParams} from '../commonTypes/types';
 import {bearerAuthMiddleware} from '../middlewares/bearerAuthMiddleware';
-import {normalizeComment, normalizeUser} from '../utils/normalizeData';
-import {blogsQueryRepository} from '../repositories/blogs-repository/blogs-queryRepository';
+import {normalizeComment} from '../utils/normalizeData';
 import {commentsQueryRepository} from '../repositories/comments-repository/comments-queryRepository';
 import {HttpCodes} from '../http-codes/http-codes';
 
@@ -24,14 +23,14 @@ export const postsRouter = Router({})
 postsRouter.get('/', async (req: Request<{}, {}, {}, QueryParams>, res: Response) => {
   const allPosts = await postsQueryRepository.getAllPosts(req.query)
 
-  res.status(200).json(allPosts)
+  res.status(HttpCodes.SUCCESSFUL).json(allPosts)
 })
 
 postsRouter.get('/:id', async (req: Request, res: Response) => {
   const post = await postsQueryRepository.getPost(req.params.id)
 
-  if (post) return res.status(200).json(post)
-  res.send(404)
+  if (post) return res.status(HttpCodes.SUCCESSFUL).json(post)
+  res.send(HttpCodes.NOT_FOUND)
 })
 
 postsRouter.post('/',
@@ -41,7 +40,7 @@ postsRouter.post('/',
   async (req: Request, res: Response) => {
     const createdPost = await postsService.createPost(req.body)
 
-    res.status(201).json(createdPost)
+    res.status(HttpCodes.CREATED).json(createdPost)
   })
 
 postsRouter.put('/:id',
@@ -51,15 +50,15 @@ postsRouter.put('/:id',
   async (req: Request, res: Response) => {
     const isEditedPost = await postsRepository.editPost(req.params.id, req.body)
 
-    if (isEditedPost) return res.send(204)
-    res.send(404)
+    if (isEditedPost) return res.send(HttpCodes.NO_CONTENT)
+    res.send(HttpCodes.NOT_FOUND)
   })
 
 postsRouter.delete('/:id', basicAuthMiddleware, async (req: Request, res: Response) => {
   const isPostRemoved = await postsRepository.removePost(req.params.id)
 
-  if (isPostRemoved) return res.send(204)
-  res.send(404)
+  if (isPostRemoved) return res.send(HttpCodes.NO_CONTENT)
+  res.send(HttpCodes.NOT_FOUND)
 })
 
 //Comments Part
@@ -78,10 +77,10 @@ postsRouter.post('/:postId/comments',
 
     if (createdComment) {
       const normalizedComment = normalizeComment(createdComment)
-      return res.status(201).json(normalizedComment)
+      return res.status(HttpCodes.CREATED).json(normalizedComment)
     }
 
-    res.send(404)
+    res.send(HttpCodes.NOT_FOUND)
   })
 
 postsRouter.get('/:postId/comments',
@@ -89,5 +88,5 @@ postsRouter.get('/:postId/comments',
     const allCommentsForSpecificPost = await commentsQueryRepository.getAllCommentsForSpecificPost(req.query, req.params.postId)
 
     if (allCommentsForSpecificPost) return res.status(HttpCodes.SUCCESSFUL).json(allCommentsForSpecificPost)
-    res.send(404)
+    res.send(HttpCodes.NOT_FOUND)
   })

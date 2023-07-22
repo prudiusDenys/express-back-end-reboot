@@ -3,7 +3,7 @@ import {v4 as uuid} from 'uuid';
 import {postsRepository} from '../repositories/posts-repository/posts-repository';
 import {blogsQueryRepository} from '../repositories/blogs-repository/blogs-queryRepository';
 import {postsQueryRepository} from '../repositories/posts-repository/posts-queryRepository';
-import {CommentViewModel, CommentViewModelDB} from '../repositories/comments-repository/types';
+import {CommentViewModelDB} from '../repositories/comments-repository/types';
 import {commentsRepository} from '../repositories/comments-repository/comments-repository';
 
 export const postsService = {
